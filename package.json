@@ -1,13 +1,26 @@
 {
   "name": "mario-kart-racing-simulator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mario Kart Simulator - A Node.js project focused on practicing programming logic, object-oriented programming (OOP), and asynchronous functions.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "mario",
+    "kart",
+    "racing",
+    "simulator",
+    "nodejs",
+    "programming",
+    "oop",
+    "asynchronous"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
 }
