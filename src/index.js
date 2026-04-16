@@ -1,7 +1,7 @@
 var readline = require('readline-sync');
 
 process.stdout.write('\u001b[2J\u001b[0;0H');
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));    
 
 const carachters = [
     {
@@ -85,22 +85,26 @@ const carachters = [
         player2.character = carachters[Math.floor(Math.random() * carachters.length)]
     } while (player2.character === player1.character)
     console.log(`\nYour opponent is ${player2.character.name}!`)
+    await sleep(2000)
 
     for (let i = 0; i < 5; i++) {
         await round(player1, player2, i + 1)
+        await sleep(2000)
     }
+
+    await endGame(player1, player2)
 
 })()
 
 async function tutorial() {
-    console.log("\n📚 Mario Kart Racing Simulator is a solo game where you can race against an opponent from Mario's games.")
-    console.log("🏎️  First of all, choose a character. Each one has their own unique stats and abilities.")
-    console.log("⚡ After choosing your character, a random track will be generated. Each track has its own characteristics and challenges.")
-    console.log("🎮 Each track has straight lines, curves, and fighting places that will make your character compete against the other racers.")
-    console.log("🎯 To gain points, roll a die and add your points from the correct ability. Each part of the track require different skills.")
-    console.log("🏁 In the end of the race, the player with more points wins the race.\n")
-    console.log("🚀 Now that you know the basics, it's time to start racing! Good luck and have fun! 🏎️💨\n")
-
+    console.log("\n📚 HOW TO PLAY - Mario Kart Simulator")
+    console.log("---------------------------------------")
+    console.log("🏎️  SELECT YOUR RACER: Pick a character with unique stats and abilities.")
+    console.log("⚡ HIT THE TRACK: A random circuit is generated with specific challenges.")
+    console.log("🎮 FACE THE CHALLENGE: Compete through Straights, Curves, and Confrontations.")
+    console.log("🎯 ROLL THE DICE: Your score depends on the die roll + your character's skills.")
+    console.log("🏆 VICTORY: The racer with the most points at the finish line wins!")
+    console.log("\n🚀 Start your engines! Good luck and have fun! 🏎️💨\n")
     await sleep(8000)
 }
 
@@ -108,19 +112,49 @@ async function round(player1, player2, roundNumber) {
 
     const tracks = ["straight line", "curve", "fighting place"]
     let currentTrack = tracks[Math.floor(Math.random() * tracks.length)]
+    let param = [] 
+
     console.log(`\n--- Round ${roundNumber} 🏁 ---`)
     console.log(`The characters are racing in: ${currentTrack}!`)
-    rollDice(player1, currentTrack)
-
-
+    await sleep(2000) 
+    switch (currentTrack) {
+        case "straight line": param[0] = "speed"; break;
+        case "curve": param[0] = "handling"; break;
+        case "fighting place": param[0] = "power"; break;
+    }
+    param[1] = await rollDice(player1, param)
+    param[2] = await rollDice(player2, param)
+    if (param[1] > param[2]) {
+        console.log(`${player1.character.name} wins this round! 🏆`)
+        player1.points++
+    } else if (param[2] > param[1]) {
+        console.log(`${player2.character.name} wins this round! 🏆`)
+        player2.points++
+    } else {
+        console.log("It's a tie! 🤝")
+        console.log("No points awarded this round.")
+    }
 }
 
-async function rollDice(player1, currentTrack) {
-    if (currentTrack === "straight line") {
-        console.log(`${player1.character.name} rolled a  🎲`)
-        await sleep(2000)
-        const dieRoll = Math.floor(Math.random() * 6) + 1
-        const points = dieRoll + player1.character.speed
-        console.log(`${player1.character.name} rolled a ${dieRoll} and has a total of ${points} points for this round!`)
-    }
+async function rollDice(player, param) {
+    let roll = Math.floor(Math.random() * 5) + 1
+    console.log(`${player.character.name} 🎲 rolled for ${param[0]}: ${roll} + ${player.character[param[0]]} = ${roll + player.character[param[0]]}`)
+    await sleep(2000)
+    return roll + player.character[param[0]]
+}
+
+async function endGame(player1, player2) {
+    console.log("\n🏁 Final Results 🏁")
+    await sleep(1000)
+    console.log(`${player1.character.name}: ${player1.points} points`)
+    await sleep(1000)
+    console.log(`${player2.character.name}: ${player2.points} points`)
+    await sleep(1000)
+    if (player1.points > player2.points) {
+        console.log(`\n🎉 ${player1.character.name} wins the game! Congratulations! 🏆`)
+    } else if (player2.points > player1.points) {
+        console.log(`\n🎉 ${player2.character.name} wins the game! Congratulations! 🏆`)
+    } else {
+        console.log("\nIt's a tie! Both racers performed equally well! 🤝")
+    }   
 }
