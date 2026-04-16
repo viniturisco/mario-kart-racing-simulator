@@ -3,7 +3,7 @@ var readline = require('readline-sync');
 process.stdout.write('\u001b[2J\u001b[0;0H');
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));    
 
-const carachters = [
+const characters = [
     {
         name: "Mario",
         speed: 4,
@@ -58,32 +58,32 @@ const carachters = [
     console.log("\n\n🏁🏎️  Welcome to the Mario Kart Racing Simulator!")
     userAnswer = readline.question("\nWould you like to start the tutorial? (y/n) \n")
 
-    if (userAnswer.toLowerCase() === 'y') await tutorial()
+    if (userAnswer.toLowerCase() === 'y' || userAnswer.toLowerCase() === 'yes') await tutorial()
     
     console.log("\nChoose your character:")
-    for (let i = 0; i < carachters.length; i++) {
-        console.log(`${i + 1}. ${carachters[i].name} (Speed: ${carachters[i].speed}, Power: ${carachters[i].power}, Handling: ${carachters[i].handling})`)
+    for (let i = 0; i < characters.length; i++) {
+        console.log(`${i + 1}. ${characters[i].name} (Speed: ${characters[i].speed}, Power: ${characters[i].power}, Handling: ${characters[i].handling})`)
     }
     characterChosen = readline.question("-----Type the number corresponding to your character:-----\n")
     switch
     (characterChosen) {
-        case '1': player1.character = carachters[0]; break;
-        case '2': player1.character = carachters[1]; break;
-        case '3': player1.character = carachters[2]; break;
-        case '4': player1.character = carachters[3]; break;
-        case '5': player1.character = carachters[4]; break;
-        case '6': player1.character = carachters[5]; break;
+        case '1': player1.character = characters[0]; break;
+        case '2': player1.character = characters[1]; break;
+        case '3': player1.character = characters[2]; break;
+        case '4': player1.character = characters[3]; break;
+        case '5': player1.character = characters[4]; break;
+        case '6': player1.character = characters[5]; break;
         default:
             console.log("I couldn't understand your answer, so I chose Mario for you.")
-            player1.character = carachters[0]
+            player1.character = characters[0]
     }
     console.log(`You chose ${player1.character.name} as your character!`)
     await sleep(2000)
     console.log("\nNow, let's choose your opponent...")
     await sleep(3000)
     do {
-        player2.character = carachters[Math.floor(Math.random() * carachters.length)]
-    } while (player2.character === player1.character)
+        player2.character = characters[Math.floor(Math.random() * characters.length)]
+    } while (player2.character == player1.character)
     console.log(`\nYour opponent is ${player2.character.name}!`)
     await sleep(2000)
 
@@ -133,11 +133,11 @@ async function round(player1, player2, roundNumber) {
     } else if (param[1] > param[2] && param[0] === "power") {
         console.log(`${player1.character.name} wins a power round! 🏆`)
         console.log(`${player2.character.name} loses a point for being hit! 💥`)
-        player2.points--
+        if (player2.points > 0) player2.points--
     } else if (param[2] > param[1] && param[0] === "power") {
         console.log(`${player2.character.name} wins a power round! 🏆`)
         console.log(`${player1.character.name} loses a point for being hit! 💥`)
-        player1.points--
+        if (player1.points > 0) player1.points--
     }    
     else {
         console.log("It's a tie! 🤝")
