@@ -124,20 +124,29 @@ async function round(player1, player2, roundNumber) {
     }
     param[1] = await rollDice(player1, param)
     param[2] = await rollDice(player2, param)
-    if (param[1] > param[2]) {
-        console.log(`${player1.character.name} wins this round! 🏆`)
+    if (param[1] > param[2] && param[0] !== "power") {
+        console.log(`${player1.character.name} wins this round. +1 Point! 🏆`)
         player1.points++
-    } else if (param[2] > param[1]) {
-        console.log(`${player2.character.name} wins this round! 🏆`)
+    } else if (param[2] > param[1] && param[0] !== "power") {
+        console.log(`${player2.character.name} wins this round. +1 Point! 🏆`)
         player2.points++
-    } else {
+    } else if (param[1] > param[2] && param[0] === "power") {
+        console.log(`${player1.character.name} wins a power round! 🏆`)
+        console.log(`${player2.character.name} loses a point for being hit! 💥`)
+        player2.points--
+    } else if (param[2] > param[1] && param[0] === "power") {
+        console.log(`${player2.character.name} wins a power round! 🏆`)
+        console.log(`${player1.character.name} loses a point for being hit! 💥`)
+        player1.points--
+    }    
+    else {
         console.log("It's a tie! 🤝")
         console.log("No points awarded this round.")
     }
 }
 
 async function rollDice(player, param) {
-    let roll = Math.floor(Math.random() * 5) + 1
+    let roll = Math.floor(Math.random() * 6) + 1
     console.log(`${player.character.name} 🎲 rolled for ${param[0]}: ${roll} + ${player.character[param[0]]} = ${roll + player.character[param[0]]}`)
     await sleep(2000)
     return roll + player.character[param[0]]
